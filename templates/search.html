@@ -8,19 +8,19 @@
     </head>
     <body>
         <section class="section">
-            <form id="search-form" class="container">
+            <form id="search-form" class="container" method="GET">
                 <div class="field has-addons">
                     <div class="control">
-                        <input class="input" type="text" placeholder="Search for games" />
+                        <input class="input" type="text" name="query" placeholder="Search for games" />
                     </div>
                     <div class="control">
-                        <button type="submit" class="button is-info">
+                        <button type="submit" formaction="/search" method="GET" class="button is-info">
                             Search
                         </button>
                     </div>
                 </div>
             </form>
-            <div class="container" >
+            <div class="container">
                 <ol>
                     {% for result in results %}
                     <li><a href="game/{{ result.id }}">{{ result.title }}</a></li>
