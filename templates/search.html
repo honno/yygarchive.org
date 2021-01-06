@@ -4,11 +4,9 @@
 <section class="section">
     {% include "form.html" %}
     <div class="container">
-        <ol>
-            {% for result in results %}
-            <li><a href="game/{{ result.id }}">{{ result.title }}</a></li>
-            {% endfor %}
-        </ol>
+        {% for result in results %}
+        <div class="container m-2"><a href="game/{{ result.id }}">{{ result.title }}</a></div>
+        {% endfor %}
     </div>
 </section>
 {% endblock %}

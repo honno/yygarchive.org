@@ -3,11 +3,43 @@
 {% block body %}
 <section class="section">
     {% include "form.html" %}
-    <div class="container">
-        <h1 class="title">{{ game.title }}</h1>
-        <p class="subtitle is-5">{{ game.creator }}</p>
+    <div class="container mt-4">
+        <h1 class="title is-1">{{ game.title }}</h1>
+        <p class="subtitle is-5">by {{ game.developer }}</p>
+        <table class="table">
+            <tr>
+                <td>Released</td>
+                <td>{{ game.date }}</td>
+            </tr>
+            <tr>
+                <td>Category</td>
+                <td>{{ game.category }}</td>
+            </tr>
+            <tr>
+                <td>Rating</td>
+                <td>{{ game.rating }} (by {{ game.nratings }} users)</td>
+            </tr>
+            <tr>
+                <td>Downloads</td>
+                <td>{{ game.downloads }}</td>
+            </tr>
+            <tr>
+                <td>Version</td>
+                <td>{{ game.version }}</td>
+            </tr>
+            <tr>
+                <td>ID</td>
+                <td>{{ game.id }}</td>
+            </tr>
+            <tr>
+                <td>Slug</td>
+                <td>{{ game.slug }}</td>
+            </tr>
+        </table>
         {{ game.description | safe }}
+        {% if game.tags | length > 0 %}
         <p><b>Tags:</b> {{ game.tags }}</p>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
