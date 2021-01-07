@@ -1,39 +1,10 @@
 from flask import Flask, request, render_template
-from peewee import Model, IntegerField, CharField, DateField, FloatField
-from playhouse.sqlite_ext import SqliteExtDatabase, FTSModel, SearchField, RowIDField
+
+from .models import *
+
+__all__ = "app"
 
 app = Flask(__name__)
-
-db = SqliteExtDatabase("sandbox.db")
-
-class Game(Model):
-    id = IntegerField(primary_key=True)
-    slug = CharField()
-    title = CharField()
-    developer = CharField()
-    date = DateField()
-    category = CharField()
-    description = CharField()
-    tags = CharField()
-    rating = FloatField()
-    nratings = IntegerField()
-    downloads = IntegerField()
-    version = IntegerField()
-
-    class Meta:
-        database = db
-
-class GameIndex(FTSModel):
-    rowid = RowIDField()
-    slug = SearchField()
-    title = SearchField()
-    description = SearchField()
-    developer = SearchField()
-    category = SearchField()
-    tags = SearchField()
-
-    class Meta:
-        database = db
 
 @app.route("/")
 def index():

@@ -40,6 +40,9 @@
         {% if game.tags | length > 0 %}
         <p><b>Tags:</b> {{ game.tags }}</p>
         {% endif %}
+        {% if game.dl_url is not none %}
+        <a href="{{ game.dl_url }}" class="button is-primary mt-4">Download</a>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
