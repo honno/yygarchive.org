@@ -7,6 +7,34 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='bulma.css')}}">
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <section class="section">
+            <div class="container" >
+            <nav class="level" >
+                <div class="level-left">
+                    <div class="level-item">
+                        <h1 class="title is-1 mb-0" ><a href="https://www.yygarchive.org/"><span style="color: #629332;">YoYo Games</span> <span style="color: #7bb83f;">Archive</span></a></h1>
+                    </div>
+                </div>
+                <div class="level-right" >
+                    <div class="level-item">
+                        <form id="search-form" class="container">
+                            <div class="field has-addons">
+                                <div class="control">
+                                    <input class="input" type="text" name="query" placeholder="Search for games" />
+                                </div>
+                                <div class="control">
+                                    <button type="submit" formaction="/search" method="GET" class="button is-info">
+                                        Search
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+            <hr />
+            {% block body %}{% endblock %}
+            </div>
+        </section>
     </body>
 </html>

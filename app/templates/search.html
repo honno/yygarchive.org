@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Search{% endblock %}
 {% block body %}
-<section class="section">
-    {% include "form.html" %}
-    <div class="container">
-        {% for result in results %}
-        <div class="container m-2"><a href="game/{{ result.id }}">{{ result.title }}</a></div>
-        {% endfor %}
-    </div>
-</section>
+{% if results | length > 0 %}
+    {% for result in results %}
+    <div class="container m-2"><a href="game/{{ result.id }}">{{ result.title }}</a></div>
+    {% endfor %}
+    {% else %}
+    <p><i>No results found D:</i></p>
+{% endif %}
 {% endblock %}

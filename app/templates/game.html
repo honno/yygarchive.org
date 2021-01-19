@@ -1,11 +1,27 @@
 {% extends "base.html" %}
 {% block title %}{{ game.title }}{% endblock %}
 {% block body %}
-<section class="section">
-    {% include "form.html" %}
-    <div class="container mt-4">
-        <h1 class="title is-1">{{ game.title }}</h1>
-        <p class="subtitle is-5">by {{ game.developer }}</p>
+<div class="columns">
+    <div class="column is-two-thirds" >
+        <div class="level mb-0" >
+            <div class="level-left" >
+                <div class="level-item">
+                    <h2 class="title is-3">{{ game.title }}</h2>
+                </div>
+                <div class="level-item">
+                    <p class="subtitle is-5">by {{ game.developer }}</p>
+                </div>
+            </div>
+        </div>
+        {{ game.description | safe }}
+        {% if game.tags | length > 0 %}
+        <p><b>Tags:</b> {{ game.tags }}</p>
+        {% endif %}
+        {% if game.dl_url is not none %}
+        <a href="{{ game.dl_url }}" class="button is-primary mt-4">Download</a>
+        {% endif %}
+    </div>
+    <div class="column" >
         <table class="table">
             <tr>
                 <td>Released</td>
@@ -36,13 +52,6 @@
                 <td>{{ game.slug }}</td>
             </tr>
         </table>
-        {{ game.description | safe }}
-        {% if game.tags | length > 0 %}
-        <p><b>Tags:</b> {{ game.tags }}</p>
-        {% endif %}
-        {% if game.dl_url is not none %}
-        <a href="{{ game.dl_url }}" class="button is-primary mt-4">Download</a>
-        {% endif %}
     </div>
-</section>
+</div>
 {% endblock %}
