@@ -24,7 +24,7 @@
             <h3 class="title is-5 mt-4 mb-2">Where are the screenshots?</h3>
             <p class="mb-2">Unfortunately the ArchiveTeam scrape only captured the low-quality thumbnails present on the Sandbox, and not the originally uploaded screenshots. The Wayback Machine did independently have screenshots saved, but only for a relatively few number of games.</p>
 
-            <h3 class="title is-5 mt-4 mb-2">How does the site work?</h3>
+            <h3 class="title is-5 mt-4 mb-2">How does the site work behind the scenes?</h3>
             <p class="mb-2">I partially reconstructed the database of the Sandbox using scraped data from the ArchiveTeam WARCs, and subsequently pre-processed it. I use the Python web framework <a href="https://flask.palletsprojects.com/">Flask</a> to power this site, which interfaces with this database. The source code is available on <a href="https://github.com/Honno/yyg-sandbox-search">GitHub</a> (the <code>sandbox.db</code> file is my final Sqlite database).</p>
             <p class="mb-2">The games are hosted on the <a href="https://archive.org/">Internet Archive</a>, which this site simply directly links to. I uploaded the games in multiple ~50GB ZIPs, which can be seen on my <a href="https://archive.org/details/@honno">IA profile</a>. Their uploader is smart in that it opens ZIP files and exposes access to individual files inside them.</p>
             <p class="mb-2">I host this site using <a href="https://www.pythonanywhere.com/">PythonAnywhere</a>, with the <code>yygarchive.org</code> domain bought from <a href="https://www.namecheap.com/">NameCheap</a>.</p>
