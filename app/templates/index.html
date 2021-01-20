@@ -8,7 +8,7 @@
             <p>In 2011 the portal was moved to <code>sandbox.yoyogames.com</code>, and was shutdown in 2016. Due to the portal being moved to the <code>sandbox</code> sub-domain, the old YoYo Games website is often referred to as the "Sandbox".</p>
 
             <h3 class="title is-5 mt-4 mb-2">What games are available?</h3>
-            <p class="mb-2">Nearly all the games available on the site in 2014 when it was <a href="https://www.archiveteam.org/index.php/GameMaker_Sandbox">saved</a> by the archivist group <a href="https://www.archiveteam.org">ArchiveTeam</a>, so a bit over 100000 games.</p>
+            <p class="mb-2">Nearly all the games available on the site in 2014 when it was <a href="https://www.archiveteam.org/index.php/GameMaker_Sandbox">saved</a> by the archivist group <a href="https://www.archiveteam.org">ArchiveTeam</a>, so a bit over 100,000 games.</p>
             <p class="mb-2">Some were missing from that collection, but I'll be hoping to recover them in due time.</p>
 
             <h3 class="title is-5 mt-4 mb-2">If there already was an archive, then what's the point of this?</h3>
@@ -19,14 +19,14 @@
             <p class="mb-2">An oversight led to a few games being missed on my upload to the Internet Archive. I'll get round to them!</p>
 
             <h3 class="title is-5 mt-4 mb-2">Why are some game downloads named "download.bin"?</h3>
-            <p class="mb-2">A small proportion of games were headerless files i.e. raw binary streams. These files will most likely be GMK files—the project files of GameMaker—which somehow had their filenames lost.</p>
+            <p class="mb-2">A small proportion of games were headerless files i.e. raw binary streams. These files will most likely be GMK files—the project files of GameMaker—which had their filenames lost by the original Sandbox uploader.</p>
 
             <h3 class="title is-5 mt-4 mb-2">Where are the screenshots?</h3>
             <p class="mb-2">Unfortunately the ArchiveTeam scrape only captured the low-quality thumbnails present on the Sandbox, and not the originally uploaded screenshots. The Wayback Machine did independently have screenshots saved, but only for a relatively few number of games.</p>
 
             <h3 class="title is-5 mt-4 mb-2">How does the site work?</h3>
-            <p class="mb-2">I partially reconstructed the database of the Sandbox using scraped data from the ArchiveTeam WARCs, and subsequently pre-processed it. I use the Python web framework <a href="https://flask.palletsprojects.com/">Flask</a> to power this site, which interfaces with this database. The source code is available on <a href="https://github.com/Honno/yyg-sandbox-search">my GitHub</a> (the <code>sandbox.db</code> is my final Sqlite database).</p>
-            <p class="mb-2">The games are hosted on the <a href="https://archive.org/">Internet Archive</a>, which this site simply directly links to. I uploaded the games in multiple ~50GB ZIPs, which can be seen on my <a href="https://archive.org/details/@honno">IA profile</a>. Their uploader is very clever in that it reads ZIPs and allows individual files to be accessed from them.</p>
+            <p class="mb-2">I partially reconstructed the database of the Sandbox using scraped data from the ArchiveTeam WARCs, and subsequently pre-processed it. I use the Python web framework <a href="https://flask.palletsprojects.com/">Flask</a> to power this site, which interfaces with this database. The source code is available on <a href="https://github.com/Honno/yyg-sandbox-search">GitHub</a> (the <code>sandbox.db</code> file is my final Sqlite database).</p>
+            <p class="mb-2">The games are hosted on the <a href="https://archive.org/">Internet Archive</a>, which this site simply directly links to. I uploaded the games in multiple ~50GB ZIPs, which can be seen on my <a href="https://archive.org/details/@honno">IA profile</a>. Their uploader is smart in that it opens ZIP files and exposes access to individual files inside them.</p>
             <p class="mb-2">I host this site using <a href="https://www.pythonanywhere.com/">PythonAnywhere</a>, with the <code>yygarchive.org</code> domain bought from <a href="https://www.namecheap.com/">NameCheap</a>.</p>
 
             <h3 class="title is-5 mt-4 mb-2">How are those ZIPs organised?</h3>
@@ -41,21 +41,21 @@
             <h3 class="title is-5 mt-4 mb-2">How can I help?</h3>
             <p class="mb-2">Regarding the archive itself, there are some games which are missing. Some of which I know how to get and will do so, others I will be conferring with others who have also looked to archiving GameMaker games. After that, I may put up a list of games which we can't find, and see if either folk have it available for a future upload on the Internet Archive, or we can try contacting the original developers and ask if they would like to re-upload their games to portals such as Game Jolt and itch.io (which we could link to).
                 <p class="mb-2">As the Internet Archive hosts the actual game downloads, it's more expensive on their end for this archive to work. If you have the means, I'd strongly encourage <a href="https://archive.org/donate/">donating to the IA</a>, and maybe mention <code>yygarchive.org</code> for tracking purposes. The work they do is simply amazing and does much more good for the world than <i>just</i> pleasing nostalgic nerds.</p>
-                <p class="mb-2">It's not critical, but I'd also like help with hosting this site. Unfortunately playing around with static site searching solutions like <a href="https://lunrjs.com/">Lunr.js</a> was impractical due to performance issues, so instead of a free and effecient service like GitHub pages I have to use a traditional web host.</p>
-                <p class="mb-2">I pay ~£4.50 a month for a site with <a href="https://www.pythonanywhere.com/">PythonAnywhere</a>, which is very easy to get going with and seems quite reliable/supportive. An additional ~50p a month goes to the domain name provided by <a href="https://www.namecheap.com/">NameCheap</a>. You can support these costs via <a href="https://www.patreon.com/yygarchive">Patreon</a>.</p>
+                <p class="mb-2">It's not critical, but I'd also like help with hosting this site. Unfortunately playing around with static site searching solutions like <a href="https://lunrjs.com/">Lunr.js</a> was impractical due to performance issues, so instead of a free and efficient service like GitHub pages I have to use a traditional web host.</p>
+                <p class="mb-2">I pay ~£4.50 a month for a site with <a href="https://www.pythonanywhere.com/">PythonAnywhere</a>, which I picked as it's easy to get going with and seems quite reliable/supportive. An additional ~50p a month goes to the domain name provided by <a href="https://www.namecheap.com/">NameCheap</a>. You can support these costs via <a href="https://www.patreon.com/yygarchive">Patreon</a>.</p>
         </div>
 
         <div class="column" >
             <div class="container has-background-light p-4" >
                 <h2 class="title is-5 mb-2">Special thanks to...</h2>
                 <p class="mb-2">The <a href="https://www.yoyogames.com/">YoYo Games</a> team for introducing game development to a generation.</p>
-                <p class="mb-2"><a href="https://www.gamejolt.com/">Game Jolt</a>, <a href="https://www.64digits.com/">64Digits</a> and other game portals which—conciously or otherwise—filled the vacuum left when the Sandbox started to whittle down.</p>
-                <p class="mb-2">The <a href="https://archiveteam.org/index.php?title=Main_Page">ArchiveTeam</a> for saving the Sandbox. <a href="https://chfoo.github.io/">chfoo</a> led the effort, with <a href="http://tracker.archiveteam.org/gamemakersandbox/">many kind folk</a> donating their bandwidth to get everything downloaded.</p>
-                <p class="mb-2">The <a href="https://archive.org/">Internet Archive</a> for hosting the ArchiveTeam download and adding it to their Wayback Machine. Additionally they host the archive of extracted games which I directly interface with on this site to create a frictionless experience. <sup>uhh I hope that's ok Mr. Kahle</sup></p>
+                <p class="mb-2"><a href="https://www.gamejolt.com/">Game Jolt</a>, <a href="https://www.64digits.com/">64Digits</a> and other game portals which inadvertently filled the vacuum left when the Sandbox started to whittle down.</p>
+                <p class="mb-2"><a href="https://archiveteam.org/index.php?title=Main_Page">ArchiveTeam</a> for saving the Sandbox. <a href="https://chfoo.github.io/">chfoo</a> led the effort, with <a href="http://tracker.archiveteam.org/gamemakersandbox/">many kind folk</a> donating their bandwidth to get everything downloaded.</p>
+                <p class="mb-2">The <a href="https://archive.org/">Internet Archive</a> for adding the ArchiveTeam save of Sandbox into their Wayback Machine. Additionally, they host the archive of extracted games I made, which I directly interface with on this site, allowing for a seamless experience.</p>
                 <p class="mb-2" ><a href="https://bluemaxima.org/">BlueMaxima</a>, <a href="https://twitter.com/SpasmanGames">Spasman</a>, and many others for their efforts in preserving GameMaker games.</p>
             </div>
             <div class="container p-4">
-                <p>Maybe I should highlight interesting games down here. To get started, try <a href="https://www.yygarchive.org/game/79100">Ninja Strike</a> if you want to see (hear?) sound effects created by a <a href="https://www.youtube.com/watch?v=fr49Yo1RCPI">beatboxer</a>.</p>
+                <p>Maybe I should highlight interesting games down here. To get started, try <a href="https://www.yygarchive.org/game/79100">Ninja Strike</a> if you want to play a great adventure platformer by a <a href="https://www.youtube.com/watch?v=fr49Yo1RCPI">beatboxer</a>... all the sound effects are his vocals!</p>
             </div>
         </div>
     </div>
