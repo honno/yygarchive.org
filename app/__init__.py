@@ -34,12 +34,23 @@ def create_app(test_config=None):
     def search():
         query = request.args.get("query")
         results = (Game
-                  .select(Game, GameIndex.rank().alias("score"))
-                  .join(GameIndex, on=(Game.id == GameIndex.rowid))
-                  .where(GameIndex.match(query))
-                  .order_by(GameIndex.rank()))
+                   .select(Game, GameIndex.rank().alias("score"))
+                   .join(GameIndex, on=(Game.id == GameIndex.rowid))
+                   .where(GameIndex.match(query))
+                   .order_by(GameIndex.rank()))
 
         return render_template("search.html", results=results)
+
+    @app.route("/top")
+    def top():
+        results = (Game
+                   .select()
+                   .order_by(Game.downloads.desc())
+                   .limit(1000)
+        )
+
+        return render_template("search.html", results=results)
+
 
     @app.route("/game/<game_id>")
     def game(game_id):
