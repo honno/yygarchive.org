@@ -39,7 +39,7 @@ def create_app(test_config=None):
                   .where(GameIndex.match(query))
                   .order_by(GameIndex.rank()))
 
-        return render_template("search.html", results=results[:100])
+        return render_template("search.html", results=results)
 
     @app.route("/game/<game_id>")
     def game(game_id):
