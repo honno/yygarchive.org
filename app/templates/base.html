@@ -29,6 +29,42 @@
                     </div>
                     <div class="level-right" >
                         <div class="level-item">
+                            <style>
+                             .tooltip {
+                                 position: relative;
+                                 display: inline-block;
+                             }
+
+                             .tooltip-text {
+                                 opacity: 0;
+                                 transition: opacity 0.5s;
+                                 visibility: hidden;
+
+                                 width: 50em;
+                                 top: 100%;
+                                 left: 50%;
+                                 margin-top: 0.5em;
+                                 margin-left: -25em;
+
+                                 position: absolute;
+                                 z-index: 1;
+                             }
+
+                             .tooltip:hover .tooltip-text {
+                                 visibility: visible;
+                                 opacity: 1;
+                             }
+                            </style>
+                            <div class="is-size-7 tooltip" >
+                                <u style="border-bottom: .125em dotted; text-decoration: none;">?</u>
+                                <div class="message is-dark is-small tooltip-text" >
+                                    <div class="message-body">
+                                        Games can be searched for by name, and metadata such as  descriptions and tags will also be matched against search queries. For example, if you want to find games made by  a specific user you can just search that user!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-item">
                             <form id="search-form" class="container">
                                 <div class="field has-addons">
                                     <div class="control">
