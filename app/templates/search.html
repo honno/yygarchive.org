@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Search{% endblock %}
 {% block body %}
+{% if by %}
+    <p class="subtitle is-5">Made by {{ by }}</a></p>
+{% endif %}
+
 {% if results | length > 0 %}
     {% for result in results %}
     <div class="container m-2"><a href="game/{{ result.id }}">{{ result.title }}</a></div>
