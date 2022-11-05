@@ -5,5 +5,6 @@ A searchable archive of the old YoYo Games portal—check the [site](https://www
 It's a very simple a [Flask](https://flask.palletsprojects.com/) project. For development I run it like so:
 
 ```bash
+pip install -e .
 FLASK_APP=app FLASK_ENV=development flask run
 ```

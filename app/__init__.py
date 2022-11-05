@@ -33,13 +33,16 @@ def create_app(test_config=None):
     @app.route("/search")
     def search():
         query = request.args.get("query")
+        by = request.args.get("by")
+
+        where_clause = Game.developer.contains(by) if by else GameIndex.match(query)
         results = (Game
                    .select(Game, GameIndex.rank().alias("score"))
                    .join(GameIndex, on=(Game.id == GameIndex.rowid))
-                   .where(GameIndex.match(query))
+                   .where(where_clause)
                    .order_by(GameIndex.rank()))
 
-        return render_template("search.html", results=results)
+        return render_template("search.html", results=results, by=by)
 
     @app.route("/top")
     def top():
