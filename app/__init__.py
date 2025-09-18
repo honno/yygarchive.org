@@ -1,34 +1,38 @@
 import os
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
+from peewee import fn
 
 from .models import *
 
 
 def create_app(test_config=None):
-    # create and configure the app
+    # Initial logic from https://flask.palletsprojects.com/en/stable/tutorial/factory/
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'sandbox.sqlite'),
     )
-
     if test_config is None:
-        # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
     else:
-        # load the test config if passed in
         app.config.from_mapping(test_config)
-
-    # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
 
+    if app.debug:
+        app.jinja_env.auto_reload = True
+        app.config["TEMPLATES_AUTO_RELOAD"] = True
+
     @app.route("/")
     def index():
         return render_template("index.html")
+
+    @app.route("/about")
+    def about():
+        return render_template("about.html")
 
     @app.route("/search")
     def search():
@@ -59,5 +63,15 @@ def create_app(test_config=None):
     def game(game_id):
         game = Game.get(Game.id == int(game_id))
         return render_template("game.html", game=game)
+
+    @app.route("/random")
+    def random():
+        game = (Game
+                   .select()
+                   .order_by(fn.Random())
+                   .limit(1)
+                   .get()
+        )
+        return redirect(url_for("game", game_id=game.id))
 
     return app
