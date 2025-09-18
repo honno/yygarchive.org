@@ -1,0 +1,56 @@
+{% extends "page_template.html" %}
+{% block title %}About{% endblock %}
+{% block content %}
+<div class="columns" >
+    <div class="column is-two-thirds" >
+            <h3 class="title is-5 mb-2">What is this?</h3>
+            <p class="mb-2">A searchable collection of <a href="https://www.yoyogames.com/gamemaker">GameMaker</a> games that were available on the old games portal for YoYo Games, which launched in 2007 on <code>yoyogames.com</code>.</p>
+            <p>In 2011 the portal was moved to <code>sandbox.yoyogames.com</code>, and was shutdown in 2016. Due to the portal being moved to the <code>sandbox</code> sub-domain, the old YoYo Games website is often referred to as the "Sandbox".</p>
+
+            <h3 class="title is-5 mt-4 mb-2">What games are available?</h3>
+            <p class="mb-2">Nearly all the games available on the site in 2014 when it was <a href="https://www.archiveteam.org/index.php/GameMaker_Sandbox">saved</a> by the archivist group <a href="https://www.archiveteam.org">ArchiveTeam</a>, so a bit over 100,000 games.</p>
+            <p class="mb-2">Some games were missing from that collection unfortunately.</p>
+
+            <h3 class="title is-5 mt-4 mb-2">If there already was an archive then what's the point of this?</h3>
+            <p class="mb-2">ArchiveTeam scraped the Sandbox into the <a href="http://fileformats.archiveteam.org/wiki/WARC">WARC format</a>, which essentially captures websites quite thoroughly in how individual pages connect to one another. They are great for preserving websites as historical records, but do not preserve site features such as search.</p>
+            <p class="mb-2">Indeed, this archive as well as other automated scrapes of the Sandbox are what underly navigating through <code>sandbox.yoyogames.com</code> on the <a href="https://web.archive.org/">Wayback Machine</a>. One cannot use the search box that was originally on the site however, which this website aims to restore.</p>
+
+            <h3 class="title is-5 mt-4 mb-2">Why are some game downloads named "download.bin"?</h3>
+            <p class="mb-2">A small proportion of games were headerless files i.e. raw binary streams. These files will most likely be GMK files—the project files of GameMaker—which had their filenames lost by the original Sandbox uploader.</p>
+
+            <h3 class="title is-5 mt-4 mb-2">Where are the screenshots?</h3>
+            <p class="mb-2">Unfortunately the ArchiveTeam scrape only captured the low-quality thumbnails present on the Sandbox, and not the originally uploaded screenshots. The Wayback Machine did independently have screenshots saved, but only for a relatively few number of games.</p>
+
+            <h3 class="title is-5 mt-4 mb-2">How does the site work behind the scenes?</h3>
+            <p class="mb-2">I partially reconstructed the database of the Sandbox using scraped data from the ArchiveTeam WARCs, and cleaned it. I use the Python web framework <a href="https://flask.palletsprojects.com/">Flask</a> to power this site, which interfaces with this database. The source code is available on <a href="https://github.com/Honno/yyg-sandbox-search">GitHub</a> (the <code>sandbox.db</code> file is my final Sqlite database).</p>
+            <p class="mb-2">The games are hosted on the <a href="https://archive.org/">Internet Archive</a>, which this site simply directly links to. I uploaded the games in multiple ~50GB ZIPs, which can be seen on my <a href="https://archive.org/details/@honno">IA profile</a>. Their uploader is handy in that it opens ZIP files and exposes access to individual files inside them.</p>
+            <p class="mb-2">I host this site using <a href="https://aws.amazon.com/lightsail/">Amazon Lightsail</a>.</p>
+
+            <h3 class="title is-5 mt-4 mb-2">How are those ZIPs on the Internet Archive organised?</h3>
+            <p class="mb-2">They're uploaded in chunks in alphabetical order. They're in chunks because ZIP files over 50GB can be problematic to the Internet Archive's backend. Originally I was uploading each game <i>separately</i> to the IA, but I was told that was a bad idea because of how IA backend works and how it would pollute search queries.</p>
+            <p class="mb-2">Pages for games on the Sandbox had their own slugs, but I sanitized them to a limited set of characters which would prevent compatibility problems for versions of Windows.</p>
+            <p class="mb-2">There were duplicate slugs, which I had envisioned to be separated by their unique database IDs in the respective slugs' folder in the respective chunk. Unfortunately I messed this up somehow and only realised I had after the arduous process of uploading all the chunks, so I uploaded a <a href="https://archive.org/details/yyg-sandbox-duplicates">supplementary item</a> just for these games with duplicate slugs.</p>
+
+            <h3 class="title is-5 mt-4 mb-2">How can I help?</h3>
+                <p class="mb-2">As the Internet Archive hosts the actual game downloads, I'd strongly encourage <a href="https://archive.org/donate/">donating to the IA</a>, and mention <code>yygarchive.org</code>. The work they do is simply amazing and does much more good for the world beyond pleasing nostalgic nerds.</p>
+        </div>
+
+        <div class="column" >
+            <div class="container has-background-light p-4" >
+                <h2 class="title is-5 mb-2">Special thanks to...</h2>
+                <p class="mb-2">The <a href="https://www.yoyogames.com/">YoYo Games</a> team for introducing game development to a generation.</p>
+                <p class="mb-2"><a href="https://www.gamejolt.com/">Game Jolt</a>, <a href="https://www.64digits.com/">64Digits</a> and other game portals which inadvertently filled the vacuum left when the Sandbox started to whittle down.</p>
+                <p class="mb-2"><a href="https://archiveteam.org/index.php?title=Main_Page">ArchiveTeam</a> for saving the Sandbox. <a href="https://chfoo.github.io/">chfoo</a> led the effort, with <a href="http://tracker.archiveteam.org/gamemakersandbox/">many kind folk</a> donating their bandwidth to get everything downloaded.</p>
+                <p class="mb-2">The <a href="https://archive.org/">Internet Archive</a> for adding the ArchiveTeam save of Sandbox into their Wayback Machine. Additionally, they host the archive of extracted games I made, which I directly interface with on this site.</p>
+                <p class="mb-2" ><a href="https://bluemaxima.org/">BlueMaxima</a>, <a href="https://twitter.com/SpasmanGames">Spasman</a>, and many others for their efforts in preserving GameMaker games.</p>
+                <p class="mb-2">Glen Chudley and Joseph Rooke for helping with initial hosting costs.</p>
+                <p class="mb-2"><a href="https://github.com/IliasDeros">Ilias Deros</a> for improving search capabilities.</p>
+            </div>
+            <div class="container p-4">
+                <p class="mb-2">Maybe I should highlight interesting games down here. To get started, try <a href="https://www.yygarchive.org/game/79100">Ninja Strike</a> if you want to play a great adventure platformer by a <a href="https://www.youtube.com/watch?v=fr49Yo1RCPI">beatboxer</a>... all the sound effects are his vocals!</p>
+                <p>Oh yeah, you can find the thousand most-downloaded games <a href="https://www.yygarchive.org/top">here</a>.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
