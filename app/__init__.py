@@ -1,7 +1,8 @@
 import os
+from random import randint
 
-from flask import Flask, request, render_template, redirect, url_for
-from peewee import fn
+from flask import Flask, request, render_template, redirect, url_for, abort
+from peewee import DoesNotExist
 
 from .models import *
 
@@ -58,20 +59,21 @@ def create_app(test_config=None):
 
         return render_template("search.html", results=results)
 
-
     @app.route("/game/<game_id>")
     def game(game_id):
-        game = Game.get(Game.id == int(game_id))
+        try:
+            game = Game.get(Game.id == int(game_id))
+        except DoesNotExist:
+            abort(404)
         return render_template("game.html", game=game)
 
     @app.route("/random")
     def random():
-        game = (Game
-                   .select()
-                   .order_by(fn.Random())
-                   .limit(1)
-                   .get()
-        )
+        count = Game.select().count()
+        if count == 0:
+            abort(500)
+        random_index = randint(0, count - 1)
+        game = Game.select().order_by(Game.id).offset(random_index).limit(1).first()
         return redirect(url_for("game", game_id=game.id))
 
     return app
