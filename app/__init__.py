@@ -40,14 +40,23 @@ def create_app(test_config=None):
         query = request.args.get("query")
         by = request.args.get("by")
 
-        where_clause = Game.developer.contains(by) if by else GameIndex.match(query)
-        results = (Game
-                   .select(Game, GameIndex.rank().alias("score"))
-                   .join(GameIndex, on=(Game.id == GameIndex.rowid))
-                   .where(where_clause)
-                   .order_by(GameIndex.rank()))
+        if by:
+            results = Game.select().where(Game.developer.contains(by))
+            # TODO: handle by + query scenarios in some way
+        elif query:
+            results = (
+                Game
+                .select(Game, GameIndex.rank().alias("score"))
+                .join(GameIndex, on=(GameIndex.rowid == Game.id))
+                .where(GameIndex.match(query))
+            )
+        else:
+            abort(400, description="No search terms provided")
 
-        return render_template("search.html", results=results, by=by)
+        results = list(results)  # convert to list so template can safely do {{ results|length }}
+
+        return render_template("search.html", results=results, by=by, query=query)
+
 
     @app.route("/top")
     def top():
