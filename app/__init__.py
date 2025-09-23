@@ -68,11 +68,10 @@ def create_app(test_config=None):
 
         return render_template("search.html", results=results)
 
-    @app.route("/game/<game_id>")
+    @app.route("/game/<int:game_id>")
     def game(game_id):
-        try:
-            game = Game.get(Game.id == int(game_id))
-        except DoesNotExist:
+        game = Game.get(Game.id == game_id)
+        if game is None:
             abort(404)
         return render_template("game.html", game=game)
 
