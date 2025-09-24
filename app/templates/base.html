@@ -3,7 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{% block title %}{% endblock %} - YoYoGames Sandbox Archive</title>
+        <meta name="description" content="{{ description or 'A searchable archive of the old YoYo Games Sandbox, preserving thousands of Game Maker projects. Maintained by honno <3'}}">
+        <title>{% if title %}{{ title }} - {% endif %}YoYo Games Archive</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='bulma.css')}}">
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico')}}">
         <style type="text/css" media="screen">

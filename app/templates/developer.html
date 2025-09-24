@@ -1,5 +1,6 @@
 {% extends "page_template.html" %}
-{% block title %}Games made by {{ developer_name }}{% endblock %}
+{% set title = developer_name %}
+{% set description = "Browse Game Maker projects by " + developer_name + " preserved from the YoYo Games Sandbox. Part of the searchable YYG Archive curated by honno <3." %}
 {% block content %}
 <p class="subtitle is-3">Games made by <a href="/developer/{{ developer_name }}">{{ developer_name }}</a></p>
 {% if results | length > 0 %}

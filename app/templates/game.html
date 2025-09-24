@@ -1,5 +1,6 @@
 {% extends "page_template.html" %}
-{% block title %}{{ game.title }}{% endblock %}
+{% set title = game.title + " by " + game.developer %}
+{% set description = "Play " + game.title + " by " + game.developer + " — a classic Game Maker project preserved from the YoYo Games Sandbox." %}
 {% block content %}
 <div class="columns">
     <div class="column is-two-thirds" >

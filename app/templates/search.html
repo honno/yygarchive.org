@@ -1,5 +1,5 @@
 {% extends "page_template.html" %}
-{% block title %}Search{% endblock %}
+{% set title = "Search" %}
 {% block content %}
 {% if results | length > 0 %}
     {% for result in results %}
