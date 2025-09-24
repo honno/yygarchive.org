@@ -1,6 +1,7 @@
 {% extends "page_template.html" %}
-{% block title %}Search{% endblock %}
+{% block title %}Games made by {{ developer_name }}{% endblock %}
 {% block content %}
+<p class="subtitle is-3">Games made by <a href="/developer/{{ developer_name }}">{{ developer_name }}</a></p>
 {% if results | length > 0 %}
     {% for result in results %}
     <div class="container m-2"><a href="/game/{{ result.id }}">{{ result.title }}</a></div>

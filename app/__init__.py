@@ -37,12 +37,8 @@ def create_app(test_config=None):
     @app.route("/search")
     def search():
         query = request.args.get("query")
-        by = request.args.get("by")
 
-        if by:
-            results = Game.select().where(Game.developer.contains(by))
-            # TODO: handle by + query scenarios in some way
-        elif query:
+        if query:
             results = (
                 Game.select(Game, GameIndex.rank().alias("score"))
                 .join(GameIndex, on=(GameIndex.rowid == Game.id))
@@ -51,11 +47,17 @@ def create_app(test_config=None):
         else:
             abort(400, description="No search terms provided")
 
-        results = list(
-            results
-        )  # convert to list so template can safely do {{ results|length }}
+        results = list(results)  # convert to list for templating
 
-        return render_template("search.html", results=results, by=by, query=query)
+        return render_template("search.html", results=results, query=query)
+
+    @app.route("/developer/<developer_name>")
+    def developer(developer_name):
+        results = Game.select().where(Game.developer == developer_name)
+        results = list(results)
+        return render_template(
+            "developer.html", results=results, developer_name=developer_name
+        )
 
     @app.route("/top")
     def top():
