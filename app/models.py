@@ -1,9 +1,10 @@
-from peewee import Model, IntegerField, CharField, DateField, FloatField, TextField
-from playhouse.sqlite_ext import SqliteExtDatabase, FTSModel, SearchField, RowIDField
+from peewee import CharField, DateField, FloatField, IntegerField, Model, TextField
+from playhouse.sqlite_ext import FTSModel, RowIDField, SearchField, SqliteExtDatabase
 
 __all__ = ["Game", "GameIndex"]
 
 db = SqliteExtDatabase("sandbox.db")
+
 
 class Game(Model):
     id = IntegerField(primary_key=True)
@@ -23,6 +24,7 @@ class Game(Model):
     class Meta:
         database = db
 
+
 class GameIndex(FTSModel):
     rowid = RowIDField()
     slug = SearchField()
@@ -34,4 +36,3 @@ class GameIndex(FTSModel):
 
     class Meta:
         database = db
-

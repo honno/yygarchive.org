@@ -7,6 +7,20 @@ dependencies = [
   "peewee",
 ]
 
+[project.optional-dependencies]
+dev = ["pre-commit"]
+deploy = ["gunicorn"]
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["app"]
+include = ["*"]
+
+[tool.flake8]
+max-line-length = 88
+
+[tool.isort]
+profile = "black"

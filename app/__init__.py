@@ -1,21 +1,20 @@
 import os
 from random import randint
 
-from flask import Flask, request, render_template, redirect, url_for, abort
-from peewee import DoesNotExist
+from flask import Flask, abort, redirect, render_template, request, url_for
 
-from .models import *
+from .models import Game, GameIndex
 
 
 def create_app(test_config=None):
     # Initial logic from https://flask.palletsprojects.com/en/stable/tutorial/factory/
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'sandbox.sqlite'),
+        SECRET_KEY="dev",
+        DATABASE=os.path.join(app.instance_path, "sandbox.sqlite"),
     )
     if test_config is None:
-        app.config.from_pyfile('config.py', silent=True)
+        app.config.from_pyfile("config.py", silent=True)
     else:
         app.config.from_mapping(test_config)
     try:
@@ -45,26 +44,22 @@ def create_app(test_config=None):
             # TODO: handle by + query scenarios in some way
         elif query:
             results = (
-                Game
-                .select(Game, GameIndex.rank().alias("score"))
+                Game.select(Game, GameIndex.rank().alias("score"))
                 .join(GameIndex, on=(GameIndex.rowid == Game.id))
                 .where(GameIndex.match(query))
             )
         else:
             abort(400, description="No search terms provided")
 
-        results = list(results)  # convert to list so template can safely do {{ results|length }}
+        results = list(
+            results
+        )  # convert to list so template can safely do {{ results|length }}
 
         return render_template("search.html", results=results, by=by, query=query)
 
-
     @app.route("/top")
     def top():
-        results = (Game
-                   .select()
-                   .order_by(Game.downloads.desc())
-                   .limit(1000)
-        )
+        results = Game.select().order_by(Game.downloads.desc()).limit(1000)
 
         return render_template("search.html", results=results)
 
