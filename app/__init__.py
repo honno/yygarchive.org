@@ -1,4 +1,5 @@
 import os
+import secrets
 from random import randint
 
 from flask import Flask, abort, redirect, render_template, request, url_for
@@ -7,11 +8,19 @@ from peewee import DoesNotExist
 from .models import Game, GameIndex
 
 
+def page_not_found(e):
+    return render_template("error.html", msg="Page not found D:"), 404
+
+
+def page_internal_server_error(e):
+    return render_template("error.html", msg="Something went wrong :o"), 500
+
+
 def create_app(test_config=None):
     # Initial logic from https://flask.palletsprojects.com/en/stable/tutorial/factory/
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY="dev",
+        SECRET_KEY=secrets.token_hex(32),
         DATABASE=os.path.join(app.instance_path, "sandbox.sqlite"),
     )
     if test_config is None:
@@ -26,6 +35,9 @@ def create_app(test_config=None):
     if app.debug:
         app.jinja_env.auto_reload = True
         app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(500, page_internal_server_error)
 
     @app.route("/")
     def index():
