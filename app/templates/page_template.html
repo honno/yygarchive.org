@@ -50,7 +50,7 @@
                     <form id="search-form" class="container">
                         <div class="field has-addons">
                             <div class="control">
-                                <input class="input" type="text" name="query" placeholder="Search for games" />
+                                <input class="input" type="text" name="query" placeholder="Search for games"{% if query %}value="{{ query }}"{% endif %}/>
                             </div>
                             <div class="control">
                                 <button type="submit" formaction="/search" method="GET" class="button is-info">
