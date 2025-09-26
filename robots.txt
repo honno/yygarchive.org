@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /game/
+Allow: /developer/
+Disallow: /search
+Sitemap: https://yygarchive.org/sitemap.xml

@@ -55,7 +55,13 @@ cd yygarchive.org
 python -m venv venv  # python13.3 if installed with deadsnakes
 source venv/bin/activate
 pip install --upgrade pip
-pip install -e .[deploy]
+pip install .[deploy]
+```
+
+### Make sitemap.xml
+```sh
+chmod 755 make_sitemap.py
+./make_sitemap.py
 ```
 
 ### Test Gunicorn locally
@@ -123,6 +129,9 @@ server {
     listen 80;
     server_name yygarchive.org www.yygarchive.org;
 
+    location = /robots.txt { root /home/USER/yygarchive.org; }
+    location = /sitemap.xml { root /home/USER/yygarchive.org; }
+
     location / {
         include proxy_params;
         proxy_pass http://unix:/home/USER/yygarchive.org/yygarchive.sock;
@@ -185,6 +194,9 @@ server {
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
+    location = /robots.txt { root /home/USER/yygarchive.org; }
+    location = /sitemap.xml { root /home/USER/yygarchive.org; }
+
     location / {
         include proxy_params;
         proxy_pass http://unix:/home/USER/yygarchive.org/yygarchive.sock;
@@ -205,15 +217,21 @@ sudo chmod 660 /home/USER/yygarchive.org/yygarchive.sock
 
 ### Deploy updates
 
-Code changes just need
+Code changes just need:
 ```sh
 sudo systemctl restart yygarchive
 ```
 
-If requirements change make sure to install them!
+If requirements change make sure to install them first:
 ```sh
 cd ~/yygarchive.org
 git pull
 source venv/bin/activate
-pip install -e .   # if deps changed
+pip install .
+```
+
+If changing nginx then:
+```sh
+sudo nginx -t
+sudo systemctl restart nginx
 ```
