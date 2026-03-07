@@ -5,7 +5,11 @@ body {
   background: #fff;
   color: #222;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
+
+footer { margin-top: auto; }
 
 header {
   background: #fff;
