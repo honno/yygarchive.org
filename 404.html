@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<script>
+  const path = location.pathname;
+  let hash = '';
+  const game = path.match(/^\/game\/(\d+)/);
+  const dev = path.match(/^\/developer\/(.+)/);
+  if (game) hash = '#game=' + game[1];
+  else if (dev) hash = '#dev=' + encodeURIComponent(decodeURIComponent(dev[1]));
+  location.replace('/' + hash);
+</script>

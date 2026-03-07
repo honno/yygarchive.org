@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YoYo Games Archive</title>
+  <meta name="description" content="A searchable archive of the old YoYo Games Sandbox, preserving thousands of Game Maker projects. Maintained by honno <3">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a href="https://github.com/honno/yygarchive.org" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+<style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner{display:none}}</style>
+
+<header>
+  <h1>YoYo Games <span>Archive</span></h1>
+  <button id="about-btn" aria-label="About">?</button>
+</header>
+
+<div class="controls">
+  <div class="controls-row">
+    <input type="text" id="search" placeholder="Search games, developers, tags…" autofocus>
+    <div class="control-group">
+      <label>Sort</label>
+      <select id="sort">
+        <option value="downloads">Downloads</option>
+        <option value="rating">Rating</option>
+        <option value="nratings">No. ratings</option>
+        <option value="date-desc">Date (newest)</option>
+        <option value="date-asc">Date (oldest)</option>
+        <option value="slug">A–Z</option>
+        <option value="random">Random</option>
+      </select>
+    </div>
+    <button id="filters-btn" aria-label="Filters">Filters</button>
+  </div>
+
+  <div id="filter-panel">
+    <div class="filter-panel-inner">
+      <div class="filter-sheet-handle"></div>
+      <div class="controls-row">
+        <div class="control-group">
+          <label>Year</label>
+          <div class="date-range">
+            <select id="year-from">
+              <option value="">From</option>
+            </select>
+            <span class="range-sep">–</span>
+            <select id="year-to">
+              <option value="">To</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Min rating <span id="rating-val">0</span></label>
+          <div class="range-wrap"><input type="range" id="min-rating" min="0" max="5" step="0.1" value="0"></div>
+        </div>
+
+        <div class="control-group">
+          <label>Min downloads</label>
+          <input type="number" id="min-downloads" min="0" max="600299" step="1" value="" placeholder="0">
+        </div>
+
+        <div class="control-group">
+          <label>Min no. ratings</label>
+          <input type="number" id="min-nratings" min="0" max="12549" step="1" value="" placeholder="0">
+        </div>
+
+        <div class="control-group" style="margin-left:auto"><label>&nbsp;</label><button id="reset-filters">Reset filters</button></div>
+      </div>
+    </div>
+  </div>
+  <div id="filter-overlay"></div>
+</div>
+
+<div id="status">
+  <span id="result-count"></span>
+  <span id="dev-badge" style="display:none">
+    Developer: <span id="dev-badge-name"></span>
+    <button id="dev-badge-clear">✕</button>
+  </span>
+  <span id="category-badge" style="display:none">
+    Category: <span id="category-badge-name"></span>
+    <button id="category-badge-clear">✕</button>
+  </span>
+  <span id="tag-badge" style="display:none">
+    Tag: <span id="tag-badge-name"></span>
+    <button id="tag-badge-clear">✕</button>
+  </span>
+</div>
+<div id="loading">Loading game database…</div>
+<div id="results"></div>
+<div id="no-results">No games found.</div>
+<div id="pagination">
+  <button id="first">« First</button>
+  <button id="prev">← Prev</button>
+  <span id="page-info"></span>
+  <button id="next">Next →</button>
+  <button id="last">Last »</button>
+</div>
+
+<div id="about-overlay" style="display:none">
+  <div id="about-modal">
+    <button id="about-close">✕</button>
+    <h2 id="about-title">About yygarchive.org</h2>
+    <div id="about-body">
+      <div id="about-main">
+        <h3>What is this?</h3>
+        <p>A searchable collection of <a href="https://www.yoyogames.com/gamemaker">GameMaker</a> games that were available on the old games portal for YoYo Games, which launched in 2007 on <code>yoyogames.com</code>.</p>
+        <p>In 2011 the portal was moved to <code>sandbox.yoyogames.com</code>, and was shutdown in 2016. Due to the portal being moved to the <code>sandbox</code> sub-domain, the old YoYo Games website is often referred to as the "Sandbox".</p>
+
+        <h3>What games are available?</h3>
+        <p>Nearly all the games available on the site in 2014 when it was <a href="https://www.archiveteam.org/index.php/GameMaker_Sandbox">saved</a> by the archivist group <a href="https://www.archiveteam.org">ArchiveTeam</a>, so a bit over 100,000 games.</p>
+        <p>Some games were missing from that collection unfortunately.</p>
+
+        <h3>If there already was an archive then what's the point of this?</h3>
+        <p>ArchiveTeam scraped the Sandbox into the <a href="http://fileformats.archiveteam.org/wiki/WARC">WARC format</a>, which essentially captures websites quite thoroughly in how individual pages connect to one another. They are great for preserving websites as historical records, but do not preserve site features such as search.</p>
+        <p>Indeed, this archive as well as other automated scrapes of the Sandbox are what underly navigating through <code>sandbox.yoyogames.com</code> on the <a href="https://web.archive.org/">Wayback Machine</a>. One cannot use the search box that was originally on the site however, which this website aims to restore.</p>
+
+        <h3>Why are some game downloads named "download.bin"?</h3>
+        <p>A small proportion of games were headerless files i.e. raw binary streams. These files will most likely be GMK files—the project files of GameMaker—which had their filenames lost by the original Sandbox uploader.</p>
+
+        <h3>Where are the screenshots?</h3>
+        <p>Unfortunately the ArchiveTeam scrape only captured the low-quality thumbnails present on the Sandbox, and not the originally uploaded screenshots. The Wayback Machine did independently have screenshots saved, but only for a relatively few number of games.</p>
+
+        <h3>How does the site work behind the scenes?</h3>
+        <p>I partially reconstructed the database of the Sandbox using scraped data from the ArchiveTeam WARCs, and cleaned it. I use vanilla CSS/JavaScript to enable the site functionality. The source code is available on <a href="https://github.com/Honno/yyg-sandbox-search">GitHub</a> (the <code>games.json</code> file is my final game's metadata store).</p>
+        <p>The games are hosted on the <a href="https://archive.org/">Internet Archive</a>, which this site simply directly links to. I uploaded the games in multiple ~50GB ZIPs, which can be seen on my <a href="https://archive.org/details/@honno">IA profile</a>. Their uploader is handy in that it opens ZIP files and exposes access to individual files inside them.</p>
+        <p>I host this site using <a href="https://docs.github.com/en/pages">GitHub Pages</a>.</p>
+
+        <h3>How are those ZIPs on the Internet Archive organised?</h3>
+        <p>They're uploaded in chunks in alphabetical order. They're in chunks because ZIP files over 50GB can be problematic to the Internet Archive's backend. Originally I was uploading each game <i>separately</i> to the IA, but I was told that was a bad idea because of how IA backend works and how it would pollute search queries.</p>
+        <p>Pages for games on the Sandbox had their own slugs, but I sanitized them to a limited set of characters which would prevent compatibility problems for versions of Windows.</p>
+        <p>There were duplicate slugs, which I had envisioned to be separated by their unique database IDs in the respective slugs' folder in the respective chunk. Unfortunately I messed this up somehow and only realised I had after the arduous process of uploading all the chunks, so I uploaded a <a href="https://archive.org/details/yyg-sandbox-duplicates">supplementary item</a> just for these games with duplicate slugs.</p>
+
+        <h3>How can I help?</h3>
+        <p>As the Internet Archive hosts the actual game downloads, I'd strongly encourage <a href="https://archive.org/donate/">donating to the IA</a>, and mention <code>yygarchive.org</code>. The work they do is simply amazing and does much more good for the world beyond pleasing nostalgic nerds.</p>
+      </div>
+      <div id="about-side">
+        <div id="about-thanks">
+          <h3>Special thanks to...</h3>
+          <p><a href="https://en.wikipedia.org/wiki/Mark_Overmars">Mark Overmars</a> and the <a href="https://www.yoyogames.com/">YoYo Games</a> team for introducing game development to a generation.</p>
+          <p><a href="https://www.gamejolt.com/">Game Jolt</a>, <a href="https://www.64digits.com/">64Digits</a> and other game portals which inadvertently filled the vacuum left when the Sandbox started to whittle down.</p>
+          <p><a href="https://archiveteam.org/index.php?title=Main_Page">ArchiveTeam</a> for saving the Sandbox. <a href="https://chfoo.github.io/">chfoo</a> led the effort, with <a href="http://tracker.archiveteam.org/gamemakersandbox/">many kind folk</a> donating their bandwidth to get everything downloaded.</p>
+          <p>The <a href="https://archive.org/">Internet Archive</a> for adding the ArchiveTeam save of Sandbox into their Wayback Machine. Additionally, they host the archive of extracted games I made, which I directly interface with on this site.</p>
+          <p><a href="https://bluemaxima.org/">BlueMaxima</a>, <a href="https://twitter.com/SpasmanGames">Spasman</a>, and many others for their efforts in preserving GameMaker games.</p>
+          <p>Glen Chudley and Joseph Rooke for helping with initial hosting costs of yygarchive.org's original iteration.</p>
+          <p><a href="https://github.com/IliasDeros">Ilias Deros</a> for improving search capabilities of yygarchive.org's original iteration.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-overlay" style="display:none">
+  <div id="modal">
+    <button id="modal-close">✕</button>
+    <div id="modal-title"></div>
+    <div id="modal-meta"></div>
+    <div id="modal-stats"></div>
+    <div id="modal-desc"></div>
+    <div id="modal-tags"></div>
+    <div id="modal-info"></div>
+    <a id="modal-dl" href="" target="_blank" rel="noopener">⤓ Download</a>
+  </div>
+</div>
+
+<script>
+  const PAGE_SIZE = 50;
+
+  let allGames = [];
+  let filtered = [];
+  let currentPage = 0;
+  let devFilter = '';
+  let categoryFilter = '';
+  let tagFilter = '';
+
+  const yearFromEl = document.getElementById('year-from');
+  const yearToEl = document.getElementById('year-to');
+
+  for (let y = 2007; y <= 2014; y++) {
+    yearFromEl.innerHTML += `<option value="${y}">${y}</option>`;
+    yearToEl.innerHTML += `<option value="${y}">${y}</option>`;
+  }
+
+  function syncYearSelects() {
+    const from = yearFromEl.value;
+    const to = yearToEl.value;
+    if (from && to && from > to) {
+      if (this === yearFromEl) yearToEl.value = from;
+      else yearFromEl.value = to;
+    }
+    applyFilters();
+  }
+
+  yearFromEl.addEventListener('change', syncYearSelects);
+  yearToEl.addEventListener('change', syncYearSelects);
+
+  // Rating slider label
+  const minRatingEl = document.getElementById('min-rating');
+  const ratingVal = document.getElementById('rating-val');
+  minRatingEl.addEventListener('input', () => {
+    ratingVal.textContent = parseFloat(minRatingEl.value).toFixed(1);
+    applyFilters();
+  });
+
+  function truncateDesc(html, max = 200) {
+    const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    return text.length > max ? text.slice(0, max).trimEnd() + '…' : text;
+  }
+
+  function renderCardTags(tags, max = 100) {
+    let list = tags.split(',').map(t => t.trim()).filter(Boolean);
+    let chips = '', len = 0;
+    for (const t of list) {
+      if (len && len + t.length + 2 > max) { chips += `<span class="card-tag card-tag-more">…</span>`; break; }
+      chips += `<span class="card-tag">${t}</span>`;
+      len += t.length + 2;
+    }
+    return chips;
+  }
+
+  function fmtDl(n) {
+    if (n >= 1000) return Math.round(n / 1000) + 'k';
+    return String(n);
+  }
+
+  function stars(rating, nratings) {
+    const full = Math.round(rating);
+    if (nratings === 0) return `<span class="stars-none">${'☆'.repeat(5)}</span>`;
+    return `${'★'.repeat(full)}${'☆'.repeat(5 - full)} ${rating.toFixed(1)}`;
+  }
+
+  function hasActiveFilter() {
+    return (
+      document.getElementById('search').value.trim() ||
+      categoryFilter ||
+      yearFromEl.value ||
+      yearToEl.value ||
+      parseFloat(document.getElementById('min-rating').value) > 0 ||
+      document.getElementById('min-downloads').value !== '' ||
+      document.getElementById('min-nratings').value !== '' ||
+      devFilter ||
+      tagFilter
+    );
+  }
+
+  function setDevFilter(dev) {
+    devFilter = dev;
+    const badge = document.getElementById('dev-badge');
+    badge.style.display = dev ? 'inline-flex' : 'none';
+    document.getElementById('dev-badge-name').textContent = dev;
+    applyFilters();
+  }
+
+  function setTagFilter(tag) {
+    tagFilter = tag;
+    const badge = document.getElementById('tag-badge');
+    badge.style.display = tag ? 'inline-flex' : 'none';
+    document.getElementById('tag-badge-name').textContent = tag;
+    applyFilters();
+  }
+
+  function setCategoryFilter(category) {
+    categoryFilter = category;
+    const badge = document.getElementById('category-badge');
+    badge.style.display = category ? 'inline-flex' : 'none';
+    document.getElementById('category-badge-name').textContent = category;
+    applyFilters();
+  }
+
+  function renderPage() {
+    const results = document.getElementById('results');
+    const noResults = document.getElementById('no-results');
+    const pagination = document.getElementById('pagination');
+
+    if (filtered.length === 0) {
+      results.innerHTML = '';
+      noResults.style.display = 'block';
+      pagination.style.display = 'none';
+      document.getElementById('result-count').textContent = 'No results.';
+      return;
+    }
+
+    noResults.style.display = 'none';
+
+    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+    const start = currentPage * PAGE_SIZE;
+    const page = filtered.slice(start, start + PAGE_SIZE);
+
+    results.innerHTML = page.map(g => {
+      const dlLink = `<a href="https://archive.org${g.path}" target="_blank" rel="noopener">⤓ Download</a>`;
+      return `
+        <div class="card" data-id="${g.id}">
+          <a class="card-title" href="#game=${g.id}">${g.title}</a>
+          <div class="card-meta">
+            <a class="card-dev" href="#dev=${encodeURIComponent(g.dev)}">${g.dev}</a>
+            <span>·</span>
+            <span>${g.date.slice(0, 4)}</span>
+            <span class="card-category" data-category="${g.category}">${g.category}</span>
+          </div>
+          ${g.desc ? `<div class="card-desc">${truncateDesc(g.desc)}</div>` : ''}
+          ${g.tags ? `<div class="card-tags">${renderCardTags(g.tags)}</div>` : ''}
+          <div class="card-footer">
+            <span class="rating">${stars(g.rating, g.nratings)}${g.nratings > 0 ? `<span class="card-dl-count">(${fmtDl(g.nratings)})</span>` : ''}</span>
+            ${dlLink}
+          </div>
+        </div>`;
+    }).join('');
+
+    document.getElementById('result-count').textContent =
+      `${filtered.length.toLocaleString()} result${filtered.length !== 1 ? 's' : ''} — showing ${(start + 1).toLocaleString()}–${Math.min(start + PAGE_SIZE, filtered.length).toLocaleString()}`;
+
+    pagination.style.display = 'flex';
+    document.getElementById('page-info').textContent = `${currentPage + 1} / ${totalPages}`;
+    document.getElementById('first').disabled = currentPage === 0;
+    document.getElementById('prev').disabled = currentPage === 0;
+    document.getElementById('next').disabled = currentPage >= totalPages - 1;
+    document.getElementById('last').disabled = currentPage >= totalPages - 1;
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function applyFilters() {
+    const query = document.getElementById('search').value.trim().toLowerCase();
+    const sort = document.getElementById('sort').value;
+    const yearFromVal = yearFromEl.value;
+    const yearToVal = yearToEl.value;
+    const minRating = parseFloat(document.getElementById('min-rating').value);
+    const minDownloadsRaw = document.getElementById('min-downloads').value;
+    const minNratingsRaw = document.getElementById('min-nratings').value;
+    const minDownloads = minDownloadsRaw !== '' ? parseInt(minDownloadsRaw) : 0;
+    const minNratings = minNratingsRaw !== '' ? parseInt(minNratingsRaw) : 0;
+    filtered = allGames.filter(g => {
+      if (devFilter && g.dev !== devFilter) return false;
+      if (categoryFilter && g.category !== categoryFilter) return false;
+      if (tagFilter && !g.tags.split(',').map(t => t.trim()).includes(tagFilter)) return false;
+      if (yearFromVal && g.date.slice(0, 4) < yearFromVal) return false;
+      if (yearToVal && g.date.slice(0, 4) > yearToVal) return false;
+      if (minRating > 0 && g.rating < minRating) return false;
+      if (minDownloads > 0 && g.downloads < minDownloads) return false;
+      if (minNratings > 0 && g.nratings < minNratings) return false;
+      if (query && !(
+        g.title.toLowerCase().includes(query) ||
+        g.dev.toLowerCase().includes(query) ||
+        g.tags.toLowerCase().includes(query) ||
+        g.desc.toLowerCase().includes(query)
+      )) return false;
+      return true;
+    });
+
+    if (sort === 'random') {
+      filtered = [...filtered].sort(() => Math.random() - 0.5);
+    } else {
+      filtered = [...filtered].sort((a, b) => {
+        if (sort === 'downloads') return b.downloads - a.downloads;
+        if (sort === 'rating') return b.rating - a.rating;
+        if (sort === 'nratings') return b.nratings - a.nratings;
+        if (sort === 'date-desc') return b.date.localeCompare(a.date);
+        if (sort === 'date-asc') return a.date.localeCompare(b.date);
+        if (sort === 'slug') {
+          const aLetter = /^[a-z]/i.test(a.slug);
+          const bLetter = /^[a-z]/i.test(b.slug);
+          if (aLetter !== bLetter) return aLetter ? -1 : 1;
+          return a.slug.localeCompare(b.slug);
+        }
+        return 0;
+      });
+    }
+
+    currentPage = 0;
+    const isActive = !!hasActiveFilter();
+    document.getElementById('reset-filters').classList.toggle('active', isActive);
+    document.getElementById('filters-btn').classList.toggle('active', isActive);
+    renderPage();
+  }
+
+  document.getElementById('dev-badge-clear').addEventListener('click', () => setDevFilter(''));
+  document.getElementById('category-badge-clear').addEventListener('click', () => setCategoryFilter(''));
+  document.getElementById('tag-badge-clear').addEventListener('click', () => setTagFilter(''));
+  document.getElementById('search').addEventListener('input', applyFilters);
+  document.getElementById('sort').addEventListener('change', applyFilters);
+document.getElementById('min-downloads').addEventListener('input', applyFilters);
+  document.getElementById('min-nratings').addEventListener('input', applyFilters);
+  document.getElementById('reset-filters').addEventListener('click', () => {
+    document.getElementById('search').value = '';
+    yearFromEl.value = '';
+    yearToEl.value = '';
+    document.getElementById('min-rating').value = 0;
+    ratingVal.textContent = '0';
+    document.getElementById('min-downloads').value = '';
+    document.getElementById('min-nratings').value = '';
+    setDevFilter('');
+    setCategoryFilter('', false);
+    setTagFilter('', false);
+    history.replaceState(null, '', location.pathname);
+    applyFilters();
+  });
+
+  document.getElementById('first').addEventListener('click', () => {
+    if (currentPage > 0) { currentPage = 0; renderPage(); }
+  });
+
+  document.getElementById('prev').addEventListener('click', () => {
+    if (currentPage > 0) { currentPage--; renderPage(); }
+  });
+
+  document.getElementById('next').addEventListener('click', () => {
+    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+    if (currentPage < totalPages - 1) { currentPage++; renderPage(); }
+  });
+
+  document.getElementById('last').addEventListener('click', () => {
+    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+    if (currentPage < totalPages - 1) { currentPage = totalPages - 1; renderPage(); }
+  });
+
+  let gameIndex = null;
+
+  // --- Modal ---
+
+  function openModal(id, updateHash = true) {
+    if (!gameIndex) gameIndex = new Map(allGames.map(g => [g.id, g]));
+    const g = gameIndex.get(id);
+    if (!g) return;
+    document.getElementById('modal-title').textContent = g.title;
+    const prettyDate = new Date(g.date).toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+    document.getElementById('modal-meta').innerHTML =
+      `<span class="modal-dev" data-dev="${g.dev}">${g.dev}</span> · ${prettyDate} · <span class="modal-category" data-category="${g.category}">${g.category}</span>`;
+    document.getElementById('modal-stats').innerHTML =
+      `${stars(g.rating, g.nratings)} <span class="modal-stats-meta">${g.nratings.toLocaleString()} ratings · ${g.downloads.toLocaleString()} downloads</span>`;
+    document.getElementById('modal-info').innerHTML =
+      `ID: ${g.id} · Slug: ${g.slug} · Version: ${g.ver}`;
+    document.getElementById('modal-desc').innerHTML = g.desc || '';
+    document.getElementById('modal-tags').innerHTML = g.tags
+      ? g.tags.split(',').map(t => `<span class="modal-tag">${t.trim()}</span>`).join('')
+      : '';
+    document.getElementById('modal-dl').href = `https://archive.org${g.path}`;
+    document.getElementById('modal-overlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    if (updateHash) history.pushState(null, '', '#game=' + id);
+  }
+
+  function closeModal(updateHash = true) {
+    document.getElementById('modal-overlay').style.display = 'none';
+    document.body.style.overflow = '';
+    if (updateHash) history.replaceState(null, '', location.pathname);
+  }
+
+  function applyFromHash() {
+    const hash = location.hash;
+    if (hash.startsWith('#dev=')) {
+      setDevFilter(decodeURIComponent(hash.slice(5)));
+    } else {
+      closeModal(false);
+      applyFilters();
+    }
+    if (hash.startsWith('#game=')) {
+      openModal(parseInt(hash.slice(6)), false);
+    }
+  }
+
+  window.addEventListener('popstate', applyFromHash);
+
+  function openAbout() {
+    document.getElementById('about-overlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeAbout() {
+    document.getElementById('about-overlay').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  const filterPanel = document.getElementById('filter-panel');
+  const filterOverlay = document.getElementById('filter-overlay');
+  function openFilters() {
+    filterPanel.classList.add('open');
+    filterOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeFilters() {
+    filterPanel.classList.remove('open');
+    filterOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('filters-btn').addEventListener('click', openFilters);
+  filterOverlay.addEventListener('click', closeFilters);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFilters(); });
+
+  document.getElementById('about-btn').addEventListener('click', openAbout);
+  document.getElementById('about-close').addEventListener('click', closeAbout);
+  document.getElementById('about-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('about-overlay')) closeAbout();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('about-overlay').style.display !== 'none') closeAbout();
+  });
+
+  document.getElementById('modal-close').addEventListener('click', () => closeModal());
+  document.getElementById('modal-overlay').addEventListener('click', e => {
+    if (!e.target.closest('#modal')) closeModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('modal-overlay').style.display !== 'none') closeModal();
+  });
+
+  document.getElementById('results').addEventListener('click', e => {
+    const cat = e.target.closest('.card-category');
+    if (cat) { setCategoryFilter(cat.dataset.category); return; }
+    const tag = e.target.closest('.card-tag:not(.card-tag-more)');
+    if (tag) { setTagFilter(tag.textContent); return; }
+    const title = e.target.closest('.card-title');
+    if (title) {
+      e.preventDefault();
+      const card = title.closest('.card');
+      openModal(parseInt(card.dataset.id));
+      return;
+    }
+    const dev = e.target.closest('.card-dev');
+    if (dev) {
+      e.preventDefault();
+      setDevFilter(decodeURIComponent(dev.href.split('#dev=')[1] || ''));
+    }
+  });
+
+  document.getElementById('modal-tags').addEventListener('click', e => {
+    const tag = e.target.closest('.modal-tag');
+    if (!tag) return;
+    closeModal(false);
+    setTagFilter(tag.textContent);
+  });
+
+  document.getElementById('modal-meta').addEventListener('click', e => {
+    const dev = e.target.closest('.modal-dev');
+    if (dev) { closeModal(false); setDevFilter(dev.dataset.dev); return; }
+    const cat = e.target.closest('.modal-category');
+    if (cat) { closeModal(false); setCategoryFilter(cat.dataset.category); }
+  });
+
+  fetch('games.json')
+    .then(r => r.json())
+    .then(data => {
+      allGames = data;
+      document.getElementById('loading').style.display = 'none';
+      applyFromHash();
+    })
+    .catch(err => {
+      document.getElementById('loading').textContent = 'Failed to load games.json: ' + err;
+    });
+</script>
+<footer>
+  <p>Not affiliated with YoYo Games or the Internet Archive.</p>
+  <p>Made with ♥ by <a href="https://honno.dev/">honno</a></p>
+</footer>
+</body>
+</html>
