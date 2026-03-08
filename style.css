@@ -18,21 +18,17 @@ header {
 }
 
 #about-btn {
-  background: #f0f0f0;
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 1.1rem;
-  height: 1.1rem;
-  font-size: 0.6rem;
-  color: #555;
+  font-size: 0.9rem;
+  color: #888;
+  padding: 0;
+  line-height: 1;
   cursor: pointer;
   flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
-#about-btn:hover { color: #111; background: #e4e4e4; }
+#about-btn:hover { color: #333; }
 
 #about-overlay {
   position: fixed;
