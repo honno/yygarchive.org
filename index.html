@@ -537,6 +537,14 @@ document.getElementById('min-downloads').addEventListener('input', applyFilters)
     if (cat) { closeModal(false); setCategoryFilter(cat.dataset.category); }
   });
 
+  const searchEl = document.getElementById('search');
+  const mq = window.matchMedia('(max-width: 640px)');
+  function updatePlaceholder() {
+    searchEl.placeholder = mq.matches ? 'Search…' : 'Search games, developers, tags…';
+  }
+  mq.addEventListener('change', updatePlaceholder);
+  updatePlaceholder();
+
   fetch('games.json')
     .then(r => r.json())
     .then(data => {
