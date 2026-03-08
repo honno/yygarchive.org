@@ -459,6 +459,11 @@ document.getElementById('min-downloads').addEventListener('input', applyFilters)
     if (hash.startsWith('#game=')) {
       openModal(parseInt(hash.slice(6)), false);
     }
+    if (hash === '#about') {
+      openAbout();
+    } else {
+      closeAbout(false);
+    }
   }
 
   window.addEventListener('popstate', applyFromHash);
@@ -466,10 +471,12 @@ document.getElementById('min-downloads').addEventListener('input', applyFilters)
   function openAbout() {
     document.getElementById('about-overlay').style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    history.pushState(null, '', '#about');
   }
-  function closeAbout() {
+  function closeAbout(updateHash = true) {
     document.getElementById('about-overlay').style.display = 'none';
     document.body.style.overflow = '';
+    if (updateHash && location.hash === '#about') history.replaceState(null, '', location.pathname);
   }
   const filterPanel = document.getElementById('filter-panel');
   const filterOverlay = document.getElementById('filter-overlay');
