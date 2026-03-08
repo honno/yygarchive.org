@@ -501,7 +501,7 @@ header h1 span { color: #7bb83f; }
 }
 
 #pagination {
-  padding: 1rem 1.5rem 2rem;
+  padding: 1rem 1.5rem 0.5rem;
   display: none;
   gap: 0.5rem;
   align-items: center;
