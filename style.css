@@ -655,7 +655,6 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  border-top: 1px solid #e0e0e0;
 }
 
 footer a { color: #629332; text-decoration: none; }
