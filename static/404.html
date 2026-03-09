@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<script>
+  const dev = location.pathname.match(/^\/developer\/(.+)/);
+  if (dev) location.replace('/#developer=' + encodeURIComponent(decodeURIComponent(dev[1])));
+  else location.replace('/');
+</script>

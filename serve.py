@@ -26,7 +26,7 @@ def about():
 
 @app.route("/game/<int:game_id>")
 def game(game_id):
-    p = Path("games.json")
+    p = Path("static/games.json")
     if not p.exists():
         abort(404)
     games = {g["id"]: g for g in json.loads(p.read_text(encoding="utf-8"))}

@@ -25,11 +25,9 @@ def main():
 
     for src in Path("static").iterdir():
         shutil.copy(src, out / src.name)
+    print("Copied static files")
 
-    for name in ["games.json", "CNAME", "404.html"]:
-        src = Path(name)
-        if src.exists():
-            shutil.copy(src, out / name)
+    shutil.copy("CNAME", out / "CNAME")
 
     env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
@@ -43,7 +41,7 @@ def main():
 
     n_games = args.limit if args.limit else (None if args.all else 0)
     if n_games != 0:
-        games_json = Path("games.json")
+        games_json = Path("static/games.json")
         if not games_json.exists():
             print("Warning: games.json not found, skipping game pages")
             return
