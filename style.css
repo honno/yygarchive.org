@@ -533,12 +533,31 @@ header h1 span { color: #7bb83f; }
 
 #pagination button:not(:disabled):hover, #pagination-top button:not(:disabled):hover { border-color: #629332; }
 
-#page-info, #page-info-top {
+.page-info {
   color: #888;
   font-size: 0.85rem;
-  min-width: 80px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
+
+.page-input {
+  width: 3.5rem;
+  padding: 0.2rem 0.3rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #333;
+  background: #f0f0f0;
+  -moz-appearance: textfield;
+}
+
+.page-input::-webkit-inner-spin-button,
+.page-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+.page-input:focus { outline: none; border-color: #629332; }
 
 #modal-overlay {
   position: fixed;

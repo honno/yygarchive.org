@@ -93,7 +93,7 @@
 <div id="pagination-top">
   <button id="first-top">« First</button>
   <button id="prev-top">← Prev</button>
-  <span id="page-info-top"></span>
+  <span class="page-info">Page <input class="page-input" id="page-input-top" type="number" min="1"> of <span class="page-total" id="page-total-top"></span></span>
   <button id="next-top">Next →</button>
   <button id="last-top">Last »</button>
 </div>
@@ -102,7 +102,7 @@
 <div id="pagination">
   <button id="first">« First</button>
   <button id="prev">← Prev</button>
-  <span id="page-info"></span>
+  <span class="page-info">Page <input class="page-input" id="page-input" type="number" min="1"> of <span class="page-total" id="page-total"></span></span>
   <button id="next">Next →</button>
   <button id="last">Last »</button>
 </div>
@@ -323,17 +323,20 @@
 
     const atFirst = currentPage === 0;
     const atLast = currentPage >= totalPages - 1;
-    const pageText = `${currentPage + 1} / ${totalPages}`;
 
     pagination.style.display = 'flex';
-    document.getElementById('page-info').textContent = pageText;
+    document.getElementById('page-input').value = currentPage + 1;
+    document.getElementById('page-input').max = totalPages;
+    document.getElementById('page-total').textContent = totalPages;
     document.getElementById('first').disabled = atFirst;
     document.getElementById('prev').disabled = atFirst;
     document.getElementById('next').disabled = atLast;
     document.getElementById('last').disabled = atLast;
 
     paginationTop.style.display = 'flex';
-    document.getElementById('page-info-top').textContent = pageText;
+    document.getElementById('page-input-top').value = currentPage + 1;
+    document.getElementById('page-input-top').max = totalPages;
+    document.getElementById('page-total-top').textContent = totalPages;
     document.getElementById('first-top').disabled = atFirst;
     document.getElementById('prev-top').disabled = atFirst;
     document.getElementById('next-top').disabled = atLast;
@@ -431,6 +434,17 @@ document.getElementById('min-downloads').addEventListener('input', applyFilters)
   document.getElementById('prev-top').addEventListener('click', goPrev);
   document.getElementById('next-top').addEventListener('click', goNext);
   document.getElementById('last-top').addEventListener('click', goLast);
+
+  function goToPage(input) {
+    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+    const p = Math.max(1, Math.min(totalPages, parseInt(input.value) || 1));
+    input.value = p;
+    if (p - 1 !== currentPage) { currentPage = p - 1; renderPage(); }
+  }
+  document.getElementById('page-input').addEventListener('change', e => goToPage(e.target));
+  document.getElementById('page-input').addEventListener('keydown', e => { if (e.key === 'Enter') goToPage(e.target); });
+  document.getElementById('page-input-top').addEventListener('change', e => goToPage(e.target));
+  document.getElementById('page-input-top').addEventListener('keydown', e => { if (e.key === 'Enter') goToPage(e.target); });
 
   let gameIndex = null;
 
