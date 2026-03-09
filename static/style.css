@@ -77,6 +77,12 @@ header {
   padding-right: 2rem;
 }
 
+#about-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
 #about-body {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -209,6 +215,7 @@ header h1 span { color: #7bb83f; }
     display: flex;
     justify-content: flex-end;
   }
+
 }
 
 .controls {
@@ -600,11 +607,27 @@ header h1 span { color: #7bb83f; }
 
 #modal-close:hover { color: #333; }
 
+#modal-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding-right: 2rem;
+}
+
+#modal-permalink {
+  color: #aaa;
+  text-decoration: none;
+  display: flex;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+
+#modal-permalink:hover { color: #629332; }
+
 #modal-title {
   font-size: 1.2rem;
   font-weight: 700;
   color: #111;
-  padding-right: 2rem;
   line-height: 1.3;
 }
 
@@ -658,6 +681,7 @@ header h1 span { color: #7bb83f; }
   border-radius: 4px;
   padding: 0.15rem 0.45rem;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .modal-tag:hover {
@@ -676,13 +700,94 @@ header h1 span { color: #7bb83f; }
 
 footer {
   padding: 1.5rem;
-  text-align: center;
   font-size: 0.78rem;
   color: #aaa;
+}
+
+footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  align-items: center;
+  gap: 0;
 }
+
+footer li { font-size: 0.7rem; }
 
 footer a { color: #629332; text-decoration: none; }
 footer a:hover { text-decoration: underline; }
+
+/* Game page — mirrors modal design exactly */
+.game-page {
+  padding: 1.5rem;
+  max-width: 640px;
+  width: calc(100% - 3rem);
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.game-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.3;
+}
+
+.game-meta {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.game-dev, .game-category {
+  color: #666;
+  text-decoration: none;
+}
+.game-dev:hover, .game-category:hover { text-decoration: underline; }
+
+.game-stats {
+  font-size: 0.8rem;
+  color: #f0c040;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-desc {
+  font-size: 0.85rem;
+  color: #333;
+  line-height: 1.6;
+}
+.game-desc a { color: #2563eb; }
+.game-desc p { margin-bottom: 0.6em; }
+.game-desc strong { color: #111; }
+.game-desc u { text-decoration: underline; }
+.game-desc em { font-style: italic; }
+
+.game-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.game-info {
+  font-size: 0.72rem;
+  color: #aaa;
+  border-top: 1px solid #eee;
+  padding-top: 0.5rem;
+}
+
+.game-dl {
+  align-self: flex-end;
+  font-size: 0.85rem;
+  color: #629332;
+  text-decoration: none;
+}
+.game-dl:hover { text-decoration: underline; }
+
+/* Linked h1 in base template */
+header h1 a { color: inherit; text-decoration: none; }
+header h1 a:hover { text-decoration: none; }

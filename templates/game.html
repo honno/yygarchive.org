@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game.title }} by {{ game.dev }}{% endblock %}
+
+{% block description %}Play {{ game.title }} by {{ game.dev }} — a classic Game Maker project preserved from the YoYo Games Sandbox.{% endblock %}
+
+{% block content %}
+<div class="game-page">
+  <div class="game-title">{{ game.title }}</div>
+
+  <div class="game-meta">
+    <a class="game-dev" href="/#developer={{ game.dev | urlencode }}">{{ game.dev }}</a>
+    · {{ game.date[:4] }} ·
+    <a class="game-category" href="/#category={{ game.category | urlencode }}">{{ game.category }}</a>
+  </div>
+
+  <div class="game-stats" id="game-stats"
+    data-rating="{{ game.rating }}"
+    data-nratings="{{ game.nratings }}"
+    data-downloads="{{ game.downloads }}">
+    {%- set full = (game.rating | round) | int %}
+    {%- if game.nratings == 0 %}<span class="stars-none">☆☆☆☆☆</span>
+    {%- else %}{{ '★' * full }}{{ '☆' * (5 - full) }} {{ game.rating | round(1) }}{% endif %}
+    <span class="modal-stats-meta">{{ "{:,}".format(game.nratings) }} ratings · {{ "{:,}".format(game.downloads) }} downloads</span>
+  </div>
+
+  {% if game.desc %}
+  <div class="game-desc">{{ game.desc | safe }}</div>
+  {% endif %}
+
+  {% if game.tags %}
+  <div class="game-tags">
+    {% for tag in game.tags.split(',') %}
+    <a href="/#tag={{ tag.strip() | urlencode }}" class="modal-tag">{{ tag.strip() }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="game-info">ID: {{ game.id }} · Slug: {{ game.slug }} · Version: {{ game.ver }}</div>
+
+  <a class="game-dl" href="https://archive.org{{ game.path }}" target="_blank" rel="noopener">⤓ Download</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const s = document.getElementById('game-stats');
+  const rating = parseFloat(s.dataset.rating);
+  const nratings = parseInt(s.dataset.nratings);
+  const downloads = parseInt(s.dataset.downloads);
+  function stars(rating, nratings) {
+    const full = Math.round(rating);
+    if (nratings === 0) return `<span class="stars-none">${'☆'.repeat(5)}</span>`;
+    return '★'.repeat(full) + '☆'.repeat(5 - full) + ` ${rating.toFixed(1)}`;
+  }
+  s.innerHTML = `${stars(rating, nratings)} <span class="modal-stats-meta">${nratings.toLocaleString()} ratings · ${downloads.toLocaleString()} downloads</span>`;
+</script>
+{% endblock %}
