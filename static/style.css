@@ -609,7 +609,7 @@ header h1 span { color: #7bb83f; }
 
 #modal-title-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.5rem;
   padding-right: 2rem;
 }
@@ -619,7 +619,6 @@ header h1 span { color: #7bb83f; }
   text-decoration: none;
   display: flex;
   flex-shrink: 0;
-  margin-top: 0.2rem;
 }
 
 #modal-permalink:hover { color: #629332; }
