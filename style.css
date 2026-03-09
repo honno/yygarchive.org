@@ -500,6 +500,14 @@ header h1 span { color: #7bb83f; }
   color: #aaa;
 }
 
+#pagination-top {
+  padding: 0.5rem 1.5rem 0;
+  display: none;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
 #pagination {
   padding: 1rem 1.5rem 0.5rem;
   display: none;
@@ -508,7 +516,7 @@ header h1 span { color: #7bb83f; }
   justify-content: center;
 }
 
-#pagination button {
+#pagination button, #pagination-top button {
   padding: 0.4rem 0.9rem;
   background: #f0f0f0;
   border: 1px solid #ddd;
@@ -518,14 +526,14 @@ header h1 span { color: #7bb83f; }
   font-size: 0.85rem;
 }
 
-#pagination button:disabled {
+#pagination button:disabled, #pagination-top button:disabled {
   opacity: 0.3;
   cursor: default;
 }
 
-#pagination button:not(:disabled):hover { border-color: #629332; }
+#pagination button:not(:disabled):hover, #pagination-top button:not(:disabled):hover { border-color: #629332; }
 
-#page-info {
+#page-info, #page-info-top {
   color: #888;
   font-size: 0.85rem;
   min-width: 80px;

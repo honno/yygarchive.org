@@ -90,6 +90,13 @@
   </span>
 </div>
 <div id="loading">Loading game database…</div>
+<div id="pagination-top">
+  <button id="first-top">« First</button>
+  <button id="prev-top">← Prev</button>
+  <span id="page-info-top"></span>
+  <button id="next-top">Next →</button>
+  <button id="last-top">Last »</button>
+</div>
 <div id="results"></div>
 <div id="no-results">No games found.</div>
 <div id="pagination">
@@ -274,11 +281,13 @@
     const results = document.getElementById('results');
     const noResults = document.getElementById('no-results');
     const pagination = document.getElementById('pagination');
+    const paginationTop = document.getElementById('pagination-top');
 
     if (filtered.length === 0) {
       results.innerHTML = '';
       noResults.style.display = 'block';
       pagination.style.display = 'none';
+      paginationTop.style.display = 'none';
       document.getElementById('result-count').textContent = 'No results.';
       return;
     }
@@ -312,12 +321,23 @@
     document.getElementById('result-count').textContent =
       `${filtered.length.toLocaleString()} result${filtered.length !== 1 ? 's' : ''} — showing ${(start + 1).toLocaleString()}–${Math.min(start + PAGE_SIZE, filtered.length).toLocaleString()}`;
 
+    const atFirst = currentPage === 0;
+    const atLast = currentPage >= totalPages - 1;
+    const pageText = `${currentPage + 1} / ${totalPages}`;
+
     pagination.style.display = 'flex';
-    document.getElementById('page-info').textContent = `${currentPage + 1} / ${totalPages}`;
-    document.getElementById('first').disabled = currentPage === 0;
-    document.getElementById('prev').disabled = currentPage === 0;
-    document.getElementById('next').disabled = currentPage >= totalPages - 1;
-    document.getElementById('last').disabled = currentPage >= totalPages - 1;
+    document.getElementById('page-info').textContent = pageText;
+    document.getElementById('first').disabled = atFirst;
+    document.getElementById('prev').disabled = atFirst;
+    document.getElementById('next').disabled = atLast;
+    document.getElementById('last').disabled = atLast;
+
+    paginationTop.style.display = 'flex';
+    document.getElementById('page-info-top').textContent = pageText;
+    document.getElementById('first-top').disabled = atFirst;
+    document.getElementById('prev-top').disabled = atFirst;
+    document.getElementById('next-top').disabled = atLast;
+    document.getElementById('last-top').disabled = atLast;
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -398,23 +418,19 @@ document.getElementById('min-downloads').addEventListener('input', applyFilters)
     applyFilters();
   });
 
-  document.getElementById('first').addEventListener('click', () => {
-    if (currentPage > 0) { currentPage = 0; renderPage(); }
-  });
+  function goFirst() { if (currentPage > 0) { currentPage = 0; renderPage(); } }
+  function goPrev() { if (currentPage > 0) { currentPage--; renderPage(); } }
+  function goNext() { const t = Math.ceil(filtered.length / PAGE_SIZE); if (currentPage < t - 1) { currentPage++; renderPage(); } }
+  function goLast() { const t = Math.ceil(filtered.length / PAGE_SIZE); if (currentPage < t - 1) { currentPage = t - 1; renderPage(); } }
 
-  document.getElementById('prev').addEventListener('click', () => {
-    if (currentPage > 0) { currentPage--; renderPage(); }
-  });
-
-  document.getElementById('next').addEventListener('click', () => {
-    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-    if (currentPage < totalPages - 1) { currentPage++; renderPage(); }
-  });
-
-  document.getElementById('last').addEventListener('click', () => {
-    const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-    if (currentPage < totalPages - 1) { currentPage = totalPages - 1; renderPage(); }
-  });
+  document.getElementById('first').addEventListener('click', goFirst);
+  document.getElementById('prev').addEventListener('click', goPrev);
+  document.getElementById('next').addEventListener('click', goNext);
+  document.getElementById('last').addEventListener('click', goLast);
+  document.getElementById('first-top').addEventListener('click', goFirst);
+  document.getElementById('prev-top').addEventListener('click', goPrev);
+  document.getElementById('next-top').addEventListener('click', goNext);
+  document.getElementById('last-top').addEventListener('click', goLast);
 
   let gameIndex = null;
 
