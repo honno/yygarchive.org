@@ -6,9 +6,49 @@ Static site generator for yygarchive.org.
 import argparse
 import json
 import shutil
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
+
+SITE_URL = "https://yygarchive.org"
+SITEMAP_SCHEMA_URL = "http://www.sitemaps.org/schemas/sitemap/0.9"
+SITEMAP_CHUNK_SIZE = 50_000  # i.e. the limit of urls per sitemap so google search console is happy
+
+
+def add_url(element: ET.Element, loc: str, **kw) -> None:
+    url = ET.SubElement(element, "url")
+    ET.SubElement(url, "loc").text = loc
+    for k, v in kw.items():
+        ET.SubElement(url, k).text = v
+
+
+def build_sitemaps(games: list, out: Path) -> None:
+    child_names = []
+
+    pages_name = "sitemap_pages.xml"
+    urlset = ET.Element("urlset", {"xmlns": SITEMAP_SCHEMA_URL})
+    add_url(urlset, f"{SITE_URL}/", priority="1.0")
+    add_url(urlset, f"{SITE_URL}/about")
+    ET.indent(urlset, space="  ", level=0)
+    ET.ElementTree(urlset).write(out / pages_name, encoding="utf-8", xml_declaration=True)
+    child_names.append(pages_name)
+
+    for i, offset in enumerate(range(0, len(games), SITEMAP_CHUNK_SIZE), start=1):
+        name = f"sitemap_games_{i}.xml"
+        urlset = ET.Element("urlset", {"xmlns": SITEMAP_SCHEMA_URL})
+        for game in games[offset : offset + SITEMAP_CHUNK_SIZE]:
+            add_url(urlset, f"{SITE_URL}/game/{game['id']}")
+        ET.indent(urlset, space="  ", level=0)
+        ET.ElementTree(urlset).write(out / name, encoding="utf-8", xml_declaration=True)
+        child_names.append(name)
+
+    sitemapindex = ET.Element("sitemapindex", {"xmlns": SITEMAP_SCHEMA_URL})
+    for name in child_names:
+        sitemap = ET.SubElement(sitemapindex, "sitemap")
+        ET.SubElement(sitemap, "loc").text = f"{SITE_URL}/{name}"
+    ET.indent(sitemapindex, space="  ", level=0)
+    ET.ElementTree(sitemapindex).write(out / "sitemap.xml", encoding="utf-8", xml_declaration=True)
 
 
 def main():
@@ -23,9 +63,11 @@ def main():
         shutil.rmtree(out)
     out.mkdir()
 
-    for src in Path("static").iterdir():
+    static_path = Path("static")
+
+    for src in static_path.iterdir():
         shutil.copy(src, out / src.name)
-    print("Copied static files")
+    print("Copied files in static/")
 
     shutil.copy("CNAME", out / "CNAME")
 
@@ -39,14 +81,11 @@ def main():
     (out / "about.html").write_text(about_tmpl.render(), encoding="utf-8")
     print("Built about.html")
 
+    games_json = static_path / "games.json"
+    games = json.loads(games_json.read_text(encoding="utf-8"))
+
     n_games = args.limit if args.limit else (None if args.all else 0)
     if n_games != 0:
-        games_json = Path("static/games.json")
-        if not games_json.exists():
-            print("Warning: games.json not found, skipping game pages")
-            return
-
-        games = json.loads(games_json.read_text(encoding="utf-8"))
         subset = games if args.all else games[:n_games]
 
         games_dir = out / "game"
@@ -61,6 +100,9 @@ def main():
                 print(f"  {i}/{len(subset)} game pages…")
 
         print(f"Built {len(subset)} game pages → _site/game/<id>.html")
+
+    build_sitemaps(games, out)
+    print("Built sitemaps")
 
 
 if __name__ == "__main__":
