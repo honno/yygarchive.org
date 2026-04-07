@@ -113,7 +113,7 @@
   const PAGE_SIZE = 50;
 
   let allGames = [];
-  let filtered = [];
+  let filtered = {{ initial_games_json | default('[]') | safe }};
   let currentPage = 0;
   let devFilter = '';
   let categoryFilter = '';
@@ -502,6 +502,10 @@
   }
   mq.addEventListener('change', updatePlaceholder);
   updatePlaceholder();
+
+  if (filtered.length > 0) {
+    renderPage();
+  }
 
   fetch('/games.json')
     .then(r => r.json())

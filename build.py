@@ -71,18 +71,21 @@ def main():
 
     shutil.copy("CNAME", out / "CNAME")
 
+    games_json = static_path / "games.json"
+    games = json.loads(games_json.read_text(encoding="utf-8"))
+
+    # Pre-render top 50 games
+    initial_games = sorted(games, key=lambda g: g["downloads"], reverse=True)[:50]
+
     env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
     index_tmpl = env.get_template("index.html")
-    (out / "index.html").write_text(index_tmpl.render(), encoding="utf-8")
+    (out / "index.html").write_text(index_tmpl.render(initial_games_json=json.dumps(initial_games), canonical_path="/"), encoding="utf-8")
     print("Built index.html")
 
     about_tmpl = env.get_template("about.html")
-    (out / "about.html").write_text(about_tmpl.render(), encoding="utf-8")
+    (out / "about.html").write_text(about_tmpl.render(canonical_path="/about"), encoding="utf-8")
     print("Built about.html")
-
-    games_json = static_path / "games.json"
-    games = json.loads(games_json.read_text(encoding="utf-8"))
 
     n_games = args.limit if args.limit else (None if args.all else 0)
     if n_games != 0:
@@ -93,9 +96,7 @@ def main():
         game_tmpl = env.get_template("game.html")
 
         for i, game in enumerate(subset, 1):
-            (games_dir / f'{game["id"]}.html').write_text(
-                game_tmpl.render(game=game), encoding="utf-8"
-            )
+            (games_dir / f'{game["id"]}.html').write_text(game_tmpl.render(game=game, canonical_path=f"/game/{game['id']}"), encoding="utf-8" )
             if i % 1000 == 0:
                 print(f"  {i}/{len(subset)} game pages…")
 

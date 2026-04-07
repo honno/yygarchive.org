@@ -1,6 +1,30 @@
 <!DOCTYPE html>
-<script>
-  const dev = location.pathname.match(/^\/developer\/(.+)/);
-  if (dev) location.replace('/#developer=' + encodeURIComponent(decodeURIComponent(dev[1])));
-  else location.replace('/');
-</script>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — YoYo Games Archive</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
+    .not-found { max-width: 400px; }
+    h1 { font-size: 3rem; color: #ccc; margin-bottom: 1rem; }
+    p { color: #666; margin-bottom: 2rem; }
+    a { color: #629332; text-decoration: none; font-weight: bold; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="not-found">
+    <h1>404</h1>
+    <p>Page not found.</p>
+    <a href="/">Go to Homepage</a>
+  </div>
+  <script>
+    const dev = location.pathname.match(/^\/developer\/(.+)/);
+    if (dev) {
+      location.replace('/#developer=' + encodeURIComponent(decodeURIComponent(dev[1])));
+    }
+  </script>
+</body>
+</html>
